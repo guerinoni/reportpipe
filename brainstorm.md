@@ -6,6 +6,7 @@
 a way to improve the process to allow Sales teams to create explanatory report for bugs and/or for new feature requests. A possible competitor / solution is https://jam.dev/
 - Allow the company to customize the template for every customer, in order to have a sort of "guided" issues to open with all information needed by support team/ help desk / engineering. For example a customer A is using your product with SDK in python and customer B is just a consumer of your app/services, those two cases should provide different information when they ask for support.
 - Keep track in the same tool of support ticket + developer roadmap in order to have an entire overview even for dev and customer support team and other team not directly involved.
+- Reminder of a ticket after X our using mail notifications or 3rd party integration for notifications in order to keep customer up to date and never forget open tickets 
 
 
 ## Userbase
