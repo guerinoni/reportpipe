@@ -12,3 +12,9 @@ a way to improve the process to allow Sales teams to create explanatory report f
 ## Userbase
 
 1. Webapp / consultings companies. Usually there are a lot of wasted time and poor documentation from the Sales team that results in unclear requirements for the dev team.
+
+## Stack comparison
+
+- https://vercel.com/pricing (front-end)
+- https://fly.io/docs/about/pricing/
+- https://railway.app/pricing
