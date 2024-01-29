@@ -18,3 +18,11 @@ a way to improve the process to allow Sales teams to create explanatory report f
 - https://vercel.com/pricing (front-end)
 - https://fly.io/docs/about/pricing/
 - https://railway.app/pricing
+
+
+## Tech stack
+
+- BE [Go](https://go.dev/) or [Rust](https://www.rust-lang.org/)
+- Tracking decisions [ADR Tools](https://github.com/npryce/adr-tools)
+- Integration test with agnostic tool for Rest API [Hurl](https://hurl.dev/)
+- If we want use conventional commits here a tool for simplify the way of commit https://github.com/cocogitto/cocogitto
