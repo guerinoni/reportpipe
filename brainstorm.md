@@ -27,6 +27,11 @@ a way to improve the process to allow Sales teams to create explanatory report f
 - Integration test with agnostic tool for Rest API [Hurl](https://hurl.dev/)
 - If we want use conventional commits here a tool for simplify the way of commit https://github.com/cocogitto/cocogitto
 - FE [React](https://it.legacy.reactjs.org/) or (https://nextjs.org/)
-- State management: Redux
-- DB ?
-- GraphQL ?
+  - I would stay on nextjs, seems more modern
+  - State management: Redux
+- DB
+  - psql for local development
+  - on cloud it depends what services we want to use but there https://neon.tech or other mentioned above for BE
+- GraphQL
+  - https://www.prisma.io/blog/top-5-reasons-to-use-graphql-b60cfa683511
+  - you can play also with the playground and test manually what is the output
