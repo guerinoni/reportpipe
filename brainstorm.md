@@ -16,15 +16,16 @@ a way to improve the process to allow Sales teams to create explanatory report f
 ## Stack comparison
 
 - https://vercel.com/pricing (front-end)
-- https://fly.io/docs/about/pricing/
+- https://fly.io/docs/about/pricing/ 
 - https://railway.app/pricing
 
 
 ## Tech stack
 
 - BE [Go](https://go.dev/) or [Rust](https://www.rust-lang.org/)
-- Tracking decisions [ADR Tools](https://github.com/npryce/adr-tools)
-- Integration test with agnostic tool for Rest API [Hurl](https://hurl.dev/)
+  - I will stay with GO for SaaS boilterplate repurpose. (maybe sellable in future)
+- Tracking decisions [ADR Tools](https://github.com/npryce/adr-tools) - Why would you use this?
+- Integration test with agnostic tool for Rest API [Hurl](https://hurl.dev/) - Why would you use this?
 - If we want use conventional commits here a tool for simplify the way of commit https://github.com/cocogitto/cocogitto
 - FE [React](https://it.legacy.reactjs.org/) or (https://nextjs.org/)
   - I would stay on nextjs, seems more modern
@@ -35,3 +36,5 @@ a way to improve the process to allow Sales teams to create explanatory report f
 - GraphQL
   - https://www.prisma.io/blog/top-5-reasons-to-use-graphql-b60cfa683511
   - you can play also with the playground and test manually what is the output
+ 
+We should go with vercel and fly.io
