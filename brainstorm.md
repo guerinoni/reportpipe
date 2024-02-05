@@ -24,8 +24,8 @@ a way to improve the process to allow Sales teams to create explanatory report f
 
 - BE [Go](https://go.dev/) or [Rust](https://www.rust-lang.org/)
   - I will stay with GO for SaaS boilterplate repurpose. (maybe sellable in future)
-- Tracking decisions [ADR Tools](https://github.com/npryce/adr-tools) - Why would you use this?
-- Integration test with agnostic tool for Rest API [Hurl](https://hurl.dev/) - Why would you use this?
+- Tracking decisions [ADR Tools](https://github.com/npryce/adr-tools) - Why would you use this? When you make a decision, whatever it is, db table, how to do a thing in code, architecture or design of feature, it is tracked for future review ad you know what is changed in terms of design.
+- Integration test with agnostic tool for Rest API [Hurl](https://hurl.dev/) - Why would you use this? This is super useful for having agnostic integration tests that should work with a simple tool like curl instead of having another code that runs QA tests or integration.
 - If we want use conventional commits here a tool for simplify the way of commit https://github.com/cocogitto/cocogitto
 - FE [React](https://it.legacy.reactjs.org/) or (https://nextjs.org/)
   - I would stay on nextjs, seems more modern
