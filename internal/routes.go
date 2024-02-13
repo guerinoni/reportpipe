@@ -12,6 +12,10 @@ type Handler interface {
 	Handler() http.Handler
 }
 
+type ApiError struct {
+	Errors map[string]string `json:"errors"`
+}
+
 type HealthHandler struct{}
 
 func (h HealthHandler) Path() string {
@@ -31,26 +35,12 @@ func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("OK\n"))
 }
 
-func AllRoutes(db *sql.DB) []Handler {
+func AllRoutes(db *sql.DB, getEnv func(string) string) []Handler {
 	var r []Handler
 
 	r = append(r, HealthHandler{})
-
-	//r = append(r, route{
-	//	path:   "/api/v1/admin/count/users",
-	//	method: http.MethodGet,
-	//	handler: adminOnly(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	//		w.Write([]byte("42\n"))
-	//	})),
-	//})
-	//
-	//r = append(r, route{
-	//	path:    "/login",
-	//	method:  http.MethodPost,
-	//	handler: LoginHandler{DB},
-	//})
-
 	r = append(r, LoginHandler{DB: db})
+	r = append(r, SignInHandler{DB: db, getEnv: getEnv})
 
 	return r
 }
@@ -72,14 +62,6 @@ func encode[T any](w http.ResponseWriter, status int, v T) error {
 		return fmt.Errorf("encode json: %w", err)
 	}
 	return nil
-}
-
-func decode[T any](r *http.Request) (T, error) {
-	var v T
-	if err := json.NewDecoder(r.Body).Decode(&v); err != nil {
-		return v, fmt.Errorf("decode json: %w", err)
-	}
-	return v, nil
 }
 
 func decodeValid[T Validator](r *http.Request) (T, map[string]string, error) {

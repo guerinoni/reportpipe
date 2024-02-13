@@ -15,6 +15,7 @@ migrate create -ext sql -dir migrations -seq users
 ```
 
 ### Testing
+The testing suite is based only on integration tests and require docker running.
 ```zsh
 make db-up
 go test ./...

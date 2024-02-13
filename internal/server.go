@@ -21,7 +21,7 @@ func Run(ctx context.Context, args []string, getenv func(string) string, stdin i
 	_ = db
 
 	mux := http.NewServeMux()
-	for _, h := range AllRoutes(db) {
+	for _, h := range AllRoutes(db, getenv) {
 		mux.Handle(h.Path(), h.Handler())
 	}
 

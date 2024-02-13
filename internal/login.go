@@ -38,10 +38,6 @@ func (b LoginHandler) Handler() http.Handler {
 	return b
 }
 
-type ApiError struct {
-	Errors map[string]string `json:"errors"`
-}
-
 func (b LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
