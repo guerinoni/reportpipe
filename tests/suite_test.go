@@ -2,13 +2,14 @@ package tests
 
 import (
 	"context"
-	"github.com/stretchr/testify/suite"
 	"math/rand"
 	"net/http"
 	"os"
 	"reportpipe/internal"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/suite"
 )
 
 type IntegrationSuite struct {

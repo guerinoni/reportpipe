@@ -3,22 +3,23 @@ package internal
 import (
 	"context"
 	"database/sql"
-	"golang.org/x/crypto/bcrypt"
 	"net/http"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
-type SignInHandler struct {
+type SignUpHandler struct {
 	DB     *sql.DB
 	getEnv func(string) string
 }
 
-type SignInRequest struct {
+type SignUpRequest struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-func (s SignInRequest) Valid(ctx context.Context) (problems map[string]string) {
+func (s SignUpRequest) Valid(ctx context.Context) (problems map[string]string) {
 	problems = make(map[string]string)
 	if s.Name == "" {
 		problems["name"] = "is required"
@@ -33,27 +34,27 @@ func (s SignInRequest) Valid(ctx context.Context) (problems map[string]string) {
 	return
 }
 
-type SignInResponse struct {
+type SignUpResponse struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 	Token string `json:"token"`
 }
 
-func (s SignInHandler) Path() string {
-	return "/signin"
+func (s SignUpHandler) Path() string {
+	return "/signup"
 }
 
-func (s SignInHandler) Handler() http.Handler {
+func (s SignUpHandler) Handler() http.Handler {
 	return s
 }
 
-func (s SignInHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s SignUpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	req, problems, err := decodeValid[SignInRequest](r)
+	req, problems, err := decodeValid[SignUpRequest](r)
 	if err != nil {
 		if err := encode[ApiError](w, http.StatusBadRequest, ApiError{problems}); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -80,7 +81,7 @@ func (s SignInHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := SignInResponse{Email: req.Email, Name: req.Name}
+	res := SignUpResponse{Email: req.Email, Name: req.Name}
 	token, err := generateJWT(res.Email, res.Name, s.getEnv)
 	if err != nil {
 		apiError := ApiError{Errors: map[string]string{"jwt": err.Error()}}
@@ -91,7 +92,7 @@ func (s SignInHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res.Token = token
-	err = encode[SignInResponse](w, http.StatusCreated, res)
+	err = encode[SignUpResponse](w, http.StatusCreated, res)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

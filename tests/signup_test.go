@@ -26,7 +26,7 @@ func (s *IntegrationSuite) TestSignInWithInvalidBody() {
 
 	for _, body := range cases {
 		s.T().Run(body, func(t *testing.T) {
-			r, err := http.NewRequest(http.MethodPost, "http://localhost:8080/signin", strings.NewReader(body))
+			r, err := http.NewRequest(http.MethodPost, "http://localhost:8080/signup", strings.NewReader(body))
 			s.Require().NoError(err)
 			resp, err := http.DefaultClient.Do(r)
 			s.Require().NoError(err)
@@ -35,16 +35,16 @@ func (s *IntegrationSuite) TestSignInWithInvalidBody() {
 	}
 }
 
-func (s *IntegrationSuite) TestSignInWithValidBody() {
+func (s *IntegrationSuite) TestSignUpWithValidBody() {
 	body := `{"email": "me@guerra.io", "password": "password", "name": "Guerra"}`
-	r, err := http.NewRequest(http.MethodPost, "http://localhost:8080/signin", strings.NewReader(body))
+	r, err := http.NewRequest(http.MethodPost, "http://localhost:8080/signup", strings.NewReader(body))
 	s.Require().NoError(err)
 
 	resp, err := http.DefaultClient.Do(r)
 	s.Require().NoError(err)
 	s.Require().Equal(http.StatusCreated, resp.StatusCode)
 
-	var v internal.SignInResponse
+	var v internal.SignUpResponse
 	s.NoError(json.NewDecoder(resp.Body).Decode(&v))
 	s.NotEmpty(v.Token)
 	s.NotEmpty(v.Email)

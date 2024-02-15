@@ -40,7 +40,7 @@ func AllRoutes(db *sql.DB, getEnv func(string) string) []Handler {
 
 	r = append(r, HealthHandler{})
 	r = append(r, LoginHandler{DB: db})
-	r = append(r, SignInHandler{DB: db, getEnv: getEnv})
+	r = append(r, SignUpHandler{DB: db, getEnv: getEnv})
 
 	return r
 }
