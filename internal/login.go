@@ -31,7 +31,7 @@ type LoginHandler struct {
 }
 
 func (b LoginHandler) Path() string {
-	return "/login"
+	return "POST /login"
 }
 
 func (b LoginHandler) Handler() http.Handler {
@@ -39,11 +39,6 @@ func (b LoginHandler) Handler() http.Handler {
 }
 
 func (b LoginHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	req, problems, err := decodeValid[LoginRequest](r)
 	if err != nil {
 		if err := encode[ApiError](w, http.StatusBadRequest, ApiError{problems}); err != nil {

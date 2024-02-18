@@ -19,7 +19,7 @@ type ApiError struct {
 type HealthHandler struct{}
 
 func (h HealthHandler) Path() string {
-	return "/health"
+	return "GET /health"
 }
 
 func (h HealthHandler) Handler() http.Handler {
@@ -27,11 +27,6 @@ func (h HealthHandler) Handler() http.Handler {
 }
 
 func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	w.Write([]byte("OK\n"))
 }
 

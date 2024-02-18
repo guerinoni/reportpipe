@@ -41,7 +41,7 @@ type SignUpResponse struct {
 }
 
 func (s SignUpHandler) Path() string {
-	return "/signup"
+	return "POST /signup"
 }
 
 func (s SignUpHandler) Handler() http.Handler {
@@ -49,11 +49,6 @@ func (s SignUpHandler) Handler() http.Handler {
 }
 
 func (s SignUpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
 	req, problems, err := decodeValid[SignUpRequest](r)
 	if err != nil {
 		if err := encode[ApiError](w, http.StatusBadRequest, ApiError{problems}); err != nil {
