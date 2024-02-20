@@ -1,4 +1,4 @@
-package internal
+package auth
 
 import (
 	"fmt"
@@ -41,7 +41,7 @@ func TestJWT(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotTokenString, err := generateJWT(tt.args.email, tt.args.name, tt.args.getenv)
+			gotTokenString, err := GenerateJWT(tt.args.email, tt.args.name, tt.args.getenv)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("generateJWT() error = %v, wantErr %v", err, tt.wantErr)
 				return

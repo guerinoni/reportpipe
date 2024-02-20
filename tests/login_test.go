@@ -1,10 +1,13 @@
 package tests
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
+
+	"reportpipe/internal"
 )
 
 func (s *IntegrationSuite) TestLoginWithInvalidBody() {
@@ -42,4 +45,24 @@ func (s *IntegrationSuite) TestLoginWithValidCredentialsButNoUserFound() {
 	b, err := io.ReadAll(resp.Body)
 	s.Require().NoError(err)
 	s.Require().JSONEq(`{"errors":{"user":"not found"}}`, string(b))
+}
+
+func (s *IntegrationSuite) TestLoginWithValidCredentials() {
+	username := NewRandom(5)
+	email := fmt.Sprintf("%s@%s.io", username, NewRandom(5))
+	s.signupUser(username, email)
+
+	body := fmt.Sprintf(`{"email": "%s", "password": "password"}`, email)
+	r, err := http.NewRequest(http.MethodPost, "http://localhost:8080/login", strings.NewReader(body))
+	s.Require().NoError(err)
+
+	resp, err := http.DefaultClient.Do(r)
+	s.Require().NoError(err)
+	s.Require().Equal(http.StatusOK, resp.StatusCode)
+
+	var v internal.SignUpResponse
+	s.NoError(json.NewDecoder(resp.Body).Decode(&v))
+	s.NotEmpty(v.Token)
+	s.NotEmpty(v.Email)
+	s.NotEmpty(v.Username)
 }

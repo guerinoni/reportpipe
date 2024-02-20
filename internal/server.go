@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"reportpipe/internal/auth"
 )
 
 func Run(ctx context.Context, args []string, getenv func(string) string, stdin io.Reader, stdout, stderr io.Writer) error {
@@ -22,6 +24,11 @@ func Run(ctx context.Context, args []string, getenv func(string) string, stdin i
 
 	mux := http.NewServeMux()
 	for _, h := range AllRoutes(db, getenv) {
+		if h.NeedsAuth() {
+			mux.Handle(h.Path(), auth.Middleware(h.Handler(), getenv))
+			continue
+		}
+
 		mux.Handle(h.Path(), h.Handler())
 	}
 

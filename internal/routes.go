@@ -10,6 +10,7 @@ import (
 type Handler interface {
 	Path() string
 	Handler() http.Handler
+	NeedsAuth() bool
 }
 
 type ApiError struct {
@@ -23,18 +24,23 @@ func (h HealthHandler) Path() string {
 }
 
 func (h HealthHandler) Handler() http.Handler {
-	return h
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, err := w.Write([]byte("OK\n"))
+		if err != nil {
+			http.Error(w, "Error writing response", http.StatusInternalServerError)
+		}
+	})
 }
 
-func (h HealthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("OK\n"))
+func (h HealthHandler) NeedsAuth() bool {
+	return false
 }
 
 func AllRoutes(db *sql.DB, getEnv func(string) string) []Handler {
 	var r []Handler
 
 	r = append(r, HealthHandler{})
-	r = append(r, LoginHandler{DB: db})
+	r = append(r, LoginHandler{DB: db, getEnv: getEnv})
 	r = append(r, SignUpHandler{DB: db, getEnv: getEnv})
 
 	return r

@@ -1,10 +1,13 @@
-package internal
+package auth
 
 import (
 	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
+	"net/http"
+	"strings"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type JWTClaim struct {
@@ -14,7 +17,8 @@ type JWTClaim struct {
 	Email string `json:"email"`
 }
 
-func generateJWT(email string, name string, getenv func(string) string) (tokenString string, err error) {
+// GenerateJWT creates a new JWT token.
+func GenerateJWT(email string, name string, getenv func(string) string) (tokenString string, err error) {
 	if email == "" {
 		return "", fmt.Errorf("email is required")
 	}
@@ -60,4 +64,34 @@ func validateToken(signedToken string, getenv func(string) string) (*JWTClaim, e
 	}
 
 	return claims, nil
+}
+
+// Middleware validates the token and calls the next handler.
+func Middleware(next http.Handler, getenv func(string) string) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")
+		if len(authHeader) != 2 {
+			w.WriteHeader(http.StatusUnauthorized)
+			_, err := w.Write([]byte("Malformed Token"))
+			if err != nil {
+				fmt.Println(err)
+			}
+			return
+		}
+
+		secret := getenv("SECRET")
+		_, err := validateToken(authHeader[1], func(string) string {
+			return secret
+		})
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			_, err := w.Write([]byte("Invalid Token"))
+			if err != nil {
+				fmt.Println(err)
+			}
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }

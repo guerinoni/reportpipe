@@ -2,12 +2,16 @@ package tests
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"os"
-	"reportpipe/internal"
+	"strings"
 	"testing"
 	"time"
+
+	"reportpipe/internal"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -35,6 +39,7 @@ func (s *IntegrationSuite) SetupTest() {
 		r, err := http.NewRequest("GET", "http://127.0.0.1:8080/health", nil)
 		s.Require().NoError(err)
 
+		s.T().Log("Waiting for server to be ready")
 		resp, err := http.DefaultClient.Do(r)
 		if err == nil && resp.StatusCode == http.StatusOK {
 			resp.Body.Close()
@@ -75,4 +80,28 @@ func NewRandom(n int, from ...rune) string {
 		b[i] = from[rand.Intn(len(from))]
 	}
 	return string(b)
+}
+
+// signupUser is a helper function to create a user.
+func (s *IntegrationSuite) signupUser(username string, email string) (token string) {
+	s.T().Helper()
+
+	body := fmt.Sprintf(`{"email": "%s", "password": "password", "username": "%s"}`, email, username)
+	r, err := http.NewRequest(http.MethodPost, "http://localhost:8080/signup", strings.NewReader(body))
+	s.Require().NoError(err)
+
+	resp, err := http.DefaultClient.Do(r)
+	s.Require().NoError(err)
+	s.Require().Equal(http.StatusCreated, resp.StatusCode)
+
+	defer resp.Body.Close()
+
+	var v internal.SignUpResponse
+	s.NoError(json.NewDecoder(resp.Body).Decode(&v))
+	s.NotEmpty(v.Token)
+	s.NotEmpty(v.Email)
+	s.NotEmpty(v.Username)
+
+	token = v.Token
+	return
 }

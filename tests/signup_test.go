@@ -1,27 +1,26 @@
 package tests
 
 import (
-	"encoding/json"
+	"fmt"
 	"net/http"
-	"reportpipe/internal"
 	"strings"
 	"testing"
 )
 
-func (s *IntegrationSuite) TestSignInWithInvalidBody() {
+func (s *IntegrationSuite) TestSignUpWithInvalidBody() {
 	cases := []string{
 		`{}`,
 		`{"email": ""}`,
 		`{"email": "", "password": ""}`,
-		`{"email": "", "password": "", "name": ""}`,
+		`{"email": "", "password": "", "username": ""}`,
 
-		`{"email": "me@guerra.io", "password": "", "name": ""}`,
-		`{"email": "", "password": "password", "name": ""}`,
-		`{"email": "", "password": "", "name": "Guerra"}`,
+		`{"email": "me@guerra.io", "password": "", "username": ""}`,
+		`{"email": "", "password": "password", "username": ""}`,
+		`{"email": "", "password": "", "username": "Guerra"}`,
 
-		`{"email": "me@guerra.io", "password": "pw", "name": ""}`,
-		`{"email": "me@guerra.io", "password": "", "name": "guerra"}`,
-		`{"email": "", "password": "password", "name": "Guerra"}`,
+		`{"email": "me@guerra.io", "password": "pw", "username": ""}`,
+		`{"email": "me@guerra.io", "password": "", "username": "guerra"}`,
+		`{"email": "", "password": "password", "username": "Guerra"}`,
 	}
 
 	for _, body := range cases {
@@ -36,17 +35,7 @@ func (s *IntegrationSuite) TestSignInWithInvalidBody() {
 }
 
 func (s *IntegrationSuite) TestSignUpWithValidBody() {
-	body := `{"email": "me@guerra.io", "password": "password", "name": "Guerra"}`
-	r, err := http.NewRequest(http.MethodPost, "http://localhost:8080/signup", strings.NewReader(body))
-	s.Require().NoError(err)
-
-	resp, err := http.DefaultClient.Do(r)
-	s.Require().NoError(err)
-	s.Require().Equal(http.StatusCreated, resp.StatusCode)
-
-	var v internal.SignUpResponse
-	s.NoError(json.NewDecoder(resp.Body).Decode(&v))
-	s.NotEmpty(v.Token)
-	s.NotEmpty(v.Email)
-	s.NotEmpty(v.Name)
+	username := NewRandom(5)
+	email := fmt.Sprintf("%s@%s.io", NewRandom(5), NewRandom(5))
+	s.signupUser(email, username)
 }

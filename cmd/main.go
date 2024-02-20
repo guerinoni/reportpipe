@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	_ "github.com/lib/pq"
 	"os"
 	"os/signal"
+
+	_ "github.com/lib/pq"
+
 	"reportpipe/internal"
 )
 
