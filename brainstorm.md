@@ -38,3 +38,20 @@ a way to improve the process to allow Sales teams to create explanatory report f
   - you can play also with the playground and test manually what is the output
  
 We should go with vercel and fly.io
+
+
+## V.1
+
+- The admin can access to personal area and create report format with a specific URL.
+- Admin can invite people through email to access a specific report view within a specified URL.
+- Normal users can only see a report page that can let them write report messages and a recap view like Trello or Jira that can show them the actual state of their issue
+
+## What to do next:
+
+- Connect FE and BE for login
+- Add payment routes and checks (initially free tier for tests) in order to create the basic structure of the platform
+- Add "I've lost my password view"
+- Implement "Invite reporters to a given URL dashboard"
+- Implement login page for reporters with a given URL
+- Implement basic dashboard and report page for reporters
+- Implement basic dashboard and report create page for admins
