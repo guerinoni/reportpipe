@@ -57,8 +57,8 @@ func TestJWT(t *testing.T) {
 				return
 			}
 
-			if claims.Name != tt.args.name {
-				t.Errorf("validateToken() claims.Name = %v, want %v", claims.Name, tt.args.name)
+			if claims.Username != tt.args.name {
+				t.Errorf("validateToken() claims.Name = %v, want %v", claims.Username, tt.args.name)
 			}
 
 			if claims.Email != tt.args.email {

@@ -10,30 +10,34 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+var _ jwt.Claims = &JWTClaim{}
+
 type JWTClaim struct {
 	jwt.RegisteredClaims
 
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	//Roles    []string  // TODO: Add roles to the token.
 }
 
 // GenerateJWT creates a new JWT token.
-func GenerateJWT(email string, name string, getenv func(string) string) (tokenString string, err error) {
+func GenerateJWT(email string, username string, getenv func(string) string) (tokenString string, err error) {
 	if email == "" {
 		return "", fmt.Errorf("email is required")
 	}
-
-	if name == "" {
-		return "", fmt.Errorf("name is required")
+	if username == "" {
+		return "", fmt.Errorf("username is required")
 	}
 
-	expirationTime := time.Now().Add(1 * time.Hour)
 	claims := &JWTClaim{
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expirationTime),
+			Issuer:    "reportpipe",
+			Subject:   username,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
-		Email: email,
-		Name:  name,
+		Email:    email,
+		Username: username,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 

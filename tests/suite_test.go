@@ -96,11 +96,9 @@ func (s *IntegrationSuite) signupUser(username string, email string) (token stri
 
 	defer resp.Body.Close()
 
-	var v internal.SignUpResponse
+	var v internal.TokenResponse
 	s.NoError(json.NewDecoder(resp.Body).Decode(&v))
 	s.NotEmpty(v.Token)
-	s.NotEmpty(v.Email)
-	s.NotEmpty(v.Username)
 
 	token = v.Token
 	return

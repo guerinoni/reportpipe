@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/go-fuego/fuego"
+	"github.com/rs/cors"
 	"io"
 	"net/http"
-
-	"reportpipe/internal/auth"
 )
 
 func Run(ctx context.Context, args []string, getenv func(string) string, stdin io.Reader, stdout, stderr io.Writer) error {
@@ -20,31 +20,24 @@ func Run(ctx context.Context, args []string, getenv func(string) string, stdin i
 
 	stdout.Write([]byte("db connected\n"))
 
-	_ = db
+	server := fuego.NewServer(fuego.WithPort(":8080"))
 
-	mux := http.NewServeMux()
-	for _, h := range AllRoutes(db, getenv) {
-		if h.NeedsAuth() {
-			mux.Handle(h.Path(), auth.Middleware(h.Handler(), getenv))
-			continue
-		}
+	fuego.Use(server, cors.New(cors.Options{
+		AllowedOrigins: []string{"localhost:3000"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+	}).Handler)
 
-		mux.Handle(h.Path(), h.Handler())
-	}
-
-	server := http.Server{
-		Addr:    "127.0.0.1:8080",
-		Handler: mux,
-	}
+	routes := newRoutes(db, getenv)
+	routes.mount(server)
 
 	go func() {
 		<-ctx.Done()
-		server.Shutdown(ctx)
+		server.Server.Shutdown(ctx)
 
 		stdout.Write([]byte("server shutdown\n"))
 	}()
 
-	if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	if err := server.Run(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return fmt.Errorf("server error: %w", err)
 	}
 

@@ -44,7 +44,7 @@ func (s *IntegrationSuite) TestLoginWithValidCredentialsButNoUserFound() {
 	s.Require().Equal(http.StatusUnauthorized, resp.StatusCode)
 	b, err := io.ReadAll(resp.Body)
 	s.Require().NoError(err)
-	s.Require().JSONEq(`{"errors":{"user":"not found"}}`, string(b))
+	s.Require().JSONEq(`{"error":"unauthorized"}`, string(b))
 }
 
 func (s *IntegrationSuite) TestLoginWithValidCredentials() {
@@ -60,9 +60,7 @@ func (s *IntegrationSuite) TestLoginWithValidCredentials() {
 	s.Require().NoError(err)
 	s.Require().Equal(http.StatusOK, resp.StatusCode)
 
-	var v internal.SignUpResponse
+	var v internal.TokenResponse
 	s.NoError(json.NewDecoder(resp.Body).Decode(&v))
 	s.NotEmpty(v.Token)
-	s.NotEmpty(v.Email)
-	s.NotEmpty(v.Username)
 }

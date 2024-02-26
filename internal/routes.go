@@ -2,48 +2,27 @@ package internal
 
 import (
 	"database/sql"
-	"encoding/json"
-	"fmt"
-	"net/http"
+	"github.com/go-fuego/fuego"
 )
 
-type Handler interface {
-	Path() string
-	Handler() http.Handler
-	NeedsAuth() bool
+type Routes struct {
+	DB     *sql.DB
+	getEnv func(string) string
 }
 
-type ApiError struct {
-	Errors map[string]string `json:"errors"`
+func newRoutes(db *sql.DB, getEnv func(string) string) Routes {
+	return Routes{
+		DB:     db,
+		getEnv: getEnv,
+	}
 }
 
-type HealthHandler struct{}
-
-func (h HealthHandler) Path() string {
-	return "GET /health"
-}
-
-func (h HealthHandler) Handler() http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("OK\n"))
-		if err != nil {
-			http.Error(w, "Error writing response", http.StatusInternalServerError)
-		}
+func (r *Routes) mount(server *fuego.Server) {
+	fuego.Get(server, "/health", func(c fuego.ContextNoBody) (string, error) {
+		return "OK", nil
 	})
-}
-
-func (h HealthHandler) NeedsAuth() bool {
-	return false
-}
-
-func AllRoutes(db *sql.DB, getEnv func(string) string) []Handler {
-	var r []Handler
-
-	r = append(r, HealthHandler{})
-	r = append(r, LoginHandler{DB: db, getEnv: getEnv})
-	r = append(r, SignUpHandler{DB: db, getEnv: getEnv})
-
-	return r
+	fuego.Post(server, "/login", r.login)
+	fuego.Post(server, "/signup", r.signup)
 }
 
 //func adminOnly(h http.Handler) http.Handler {
@@ -55,26 +34,6 @@ func AllRoutes(db *sql.DB, getEnv func(string) string) []Handler {
 //h.ServeHTTP(w, r)
 //})
 //}
-
-func encode[T any](w http.ResponseWriter, status int, v T) error {
-	w.WriteHeader(status)
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(v); err != nil {
-		return fmt.Errorf("encode json: %w", err)
-	}
-	return nil
-}
-
-func decodeValid[T Validator](r *http.Request) (T, map[string]string, error) {
-	var v T
-	if err := json.NewDecoder(r.Body).Decode(&v); err != nil {
-		return v, nil, fmt.Errorf("decode json: %w", err)
-	}
-	if problems := v.Valid(r.Context()); len(problems) > 0 {
-		return v, problems, fmt.Errorf("invalid %T: %d problems", v, len(problems))
-	}
-	return v, nil, nil
-}
 
 // openDB opens a connection to a database and returns the connection.
 func openDB() (*sql.DB, error) {
