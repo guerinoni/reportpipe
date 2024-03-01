@@ -1,17 +1,32 @@
-async function login(email, password) {
+import {apiUrl} from "../constants/RoutesUrl";
+
+async function login(user) {
     const body = {
-        email,
-        password
+        email: user?.email,
+        password: user?.password
     }
-    return await fetch('https://api.example.com/...', body)
+
+    return await fetch(apiUrl + "/login",
+        {
+                body: body,
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json'}
+        })
 }
 
-async function register(email, password) {
+async function register(user) {
     const body = {
-        email,
-        password
+        email: user?.email,
+        password: user?.password,
+        username: user?.username
     }
-    return await fetch('https://api.example.com/...', body)
+    return await fetch(apiUrl + "/signup",{
+        body: body,
+        method: "POST",
+        headers: {
+            'Content-type': 'application/json'}
+    })
 }
 
 const LoginService = {
