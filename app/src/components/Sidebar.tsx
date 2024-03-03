@@ -149,7 +149,8 @@ export default function Sidebar() {
           <ListItem>
             <ListItemButton>
               <HomeRoundedIcon />
-              <ListItemContent>
+              <ListItemContent component="a"
+                               href="/home">
                 <Typography level="title-sm">Home</Typography>
               </ListItemContent>
             </ListItemButton>
