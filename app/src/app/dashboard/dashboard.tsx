@@ -69,7 +69,7 @@ export default function Dashboard() {
                 Dashboard
               </Link>
               <Typography color="primary" fontWeight={500} fontSize={12}>
-                Orders
+                Reports
               </Typography>
             </Breadcrumbs>
           </Box>
@@ -85,7 +85,7 @@ export default function Dashboard() {
             }}
           >
             <Typography level="h2" component="h1">
-              Orders
+              Reports
             </Typography>
             <Button
               color="primary"

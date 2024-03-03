@@ -10,6 +10,9 @@ import Dashboard from "@/app/dashboard/dashboard";
 
 export default function Home() {
   return (
+
+      //add checks if user is logged in session, if not, redirect to login - missing API to check user exist / logged
+
       <Dashboard />
   );
 }
