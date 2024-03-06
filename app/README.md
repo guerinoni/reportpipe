@@ -10,6 +10,12 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your web browser to see the result.
 
+If you want to use docker container for development:
+```zsh
+docker build -t reportpipe-webapp .
+docker run -it -p 3000:3000 -v $(pwd):/app reportpipe-webapp bash
+```
+
 ## Learn more
 
 To learn more about this example:
