@@ -1,6 +1,6 @@
 import {apiUrl} from "../constants/RoutesUrl";
 
-async function login(user) {
+async function login(user, userType) {
     const body = {
         email: user?.email,
         password: user?.password

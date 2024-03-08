@@ -198,32 +198,6 @@ export default function MyProfile() {
                                     />
                                 </FormControl>
                             </Stack>
-                            <div>
-                                <CountrySelector />
-                            </div>
-                            <div>
-                                <FormControl sx={{ display: { sm: 'contents' } }}>
-                                    <FormLabel>Timezone</FormLabel>
-                                    <Select
-                                        size="sm"
-                                        startDecorator={<AccessTimeFilledRoundedIcon />}
-                                        defaultValue="1"
-                                    >
-                                        <Option value="1">
-                                            Indochina Time (Bangkok){' '}
-                                            <Typography textColor="text.tertiary" ml={0.5}>
-                                                — GMT+07:00
-                                            </Typography>
-                                        </Option>
-                                        <Option value="2">
-                                            Indochina Time (Ho Chi Minh City){' '}
-                                            <Typography textColor="text.tertiary" ml={0.5}>
-                                                — GMT+07:00
-                                            </Typography>
-                                        </Option>
-                                    </Select>
-                                </FormControl>
-                            </div>
                         </Stack>
                     </Stack>
                     <Stack
@@ -281,7 +255,7 @@ export default function MyProfile() {
                         </Stack>
                         <FormControl>
                             <FormLabel>Role</FormLabel>
-                            <Input size="sm" defaultValue="UI Developer" />
+                            <Input size="sm" defaultValue="Admin" />
                         </FormControl>
                         <FormControl sx={{ flexGrow: 1 }}>
                             <FormLabel>Email</FormLabel>

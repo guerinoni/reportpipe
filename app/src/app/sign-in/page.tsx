@@ -14,7 +14,7 @@ export default function SignIn() {
 
     return (
         <>
-            <SignInForm type={"sign-in"}/>
+            <SignInForm type={"sign-in"} userType={"admin"}/>
         </>
     );
 }

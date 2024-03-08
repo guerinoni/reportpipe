@@ -441,7 +441,7 @@ export default function OrderTable() {
                     },
                   }}
                 >
-                  Invoice
+                  Report
                 </Link>
               </th>
               <th style={{ width: 140, padding: '12px 6px' }}>Date</th>
@@ -508,8 +508,11 @@ export default function OrderTable() {
                 </td>
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                    <Link level="body-xs" component="button">
-                      Download
+                    <Link level="body-xs" component="button" onClick={() => {
+                      // go to jira view of specific report
+
+                    }}>
+                      Show
                     </Link>
                     <RowMenu />
                   </Box>

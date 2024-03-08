@@ -11,7 +11,7 @@ import SignInForm from "@/components/SignInForm";
 export default function SignUp() {
   return (
       <>
-          <SignInForm type={"sign-up"}/>
+          <SignInForm type={"sign-up"} userType={"admin"}/>
       </>
   );
 }

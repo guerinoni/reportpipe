@@ -12,21 +12,21 @@ import LoginService from "../services/LoginService";
 import {redirect} from "next/navigation";
 
 
-export default function SignInForm({type}) {
+export default function SignInForm({type, userType}) {
 
     const [user, setUser] = useState({})
 
     const handleFormSubmit = async () => {
         if (type === 'sign-in') {
             try {
-                await LoginService.login(user)
+                await LoginService.login(user, userType)
                 redirect("/home")
             } catch (e) {
                 console.log("E: ", e)
             }
         } else {
             try {
-                await LoginService.register(user)
+                await LoginService.register(user, userType)
                 redirect("/login")
             } catch (e) {
                 console.log("E: ", e)
