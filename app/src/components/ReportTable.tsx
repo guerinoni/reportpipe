@@ -278,10 +278,11 @@ function RowMenu() {
   );
 }
 
-export default function OrderTable() {
+export default function ReportTable() {
   const [order, setOrder] = React.useState<Order>('desc');
   const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [open, setOpen] = React.useState(false);
+
   const renderFilters = () => (
     <React.Fragment>
       <FormControl size="sm">
@@ -509,7 +510,7 @@ export default function OrderTable() {
                 <td>
                   <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                     <Link level="body-xs" component="button" onClick={() => {
-                      // go to jira view of specific report
+                      // go to view of specific report
 
                     }}>
                       Show
