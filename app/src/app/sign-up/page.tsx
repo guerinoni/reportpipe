@@ -6,7 +6,7 @@ import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import Link from '@mui/joy/Link';
-import SignInForm from "@/components/signInForm";
+import SignInForm from "@/components/SignInForm";
 
 export default function SignUp() {
   return (

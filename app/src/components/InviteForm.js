@@ -12,38 +12,22 @@ import LoginService from "../services/LoginService";
 import {redirect} from "next/navigation";
 
 
-export default function SignInForm({type}) {
+export default function InviteForm() {
 
     const [user, setUser] = useState({})
 
     const handleFormSubmit = async () => {
-        console.log("Type: ", type)
-        if (type === 'sign-in') {
-            try {
-                await LoginService.login(user)
-                redirect("/home")
-            } catch (e) {
-                console.log("E: ", e)
-            }
-        } else {
-            try {
-                await LoginService.register(user)
-                redirect("/login")
-            } catch (e) {
-                console.log("E: ", e)
-            }
+        try {
+            await LoginService.invite(user)
+            //redirect("/home")
+        } catch (e) {
+            console.log("E: ", e)
         }
     }
 
     const handleEmail = (event) => {
         let tmpUser = {...user}
         tmpUser.email = event.target.value
-        setUser(tmpUser)
-    }
-
-    const handlePswd = (event) => {
-        let tmpUser = {...user}
-        tmpUser.password = event.target.value
         setUser(tmpUser)
     }
 
@@ -74,26 +58,15 @@ export default function SignInForm({type}) {
             >
                 <div>
                     <Typography level="h4" component="h1">
-                        <strong>Welcome back 👋</strong>
+                        <strong>Invite user</strong>
                     </Typography>
-                    <Typography level="body-sm">Sign in to continue.</Typography>
+                    <Typography level="body-sm">Send a login link</Typography>
                 </div>
                 <FormControl id="email">
                     <FormLabel>Email</FormLabel>
                     <Input name="email" type="email" placeholder="johndoe@email.com" onChange={handleEmail}/>
                 </FormControl>
-                <FormControl id="password">
-                    <FormLabel>Password</FormLabel>
-                    <Input name="password" type="password" placeholder="password" onChange={handlePswd}/>
-                </FormControl>
-                <Button sx={{ mt: 1 }} onClick={handleFormSubmit}>Log in</Button>
-                <Typography
-                    endDecorator={<Link href="/sign-up">Sign up</Link>}
-                    fontSize="sm"
-                    sx={{ alignSelf: 'center' }}
-                >
-                    Don&apos;t have an account?
-                </Typography>
+                <Button sx={{ mt: 1 }} onClick={handleFormSubmit}>Invite</Button>
             </Sheet>
         </Sheet>
     );

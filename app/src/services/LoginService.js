@@ -29,9 +29,20 @@ async function register(user) {
     })
 }
 
+async function invite() {
+    const body = {}
+    return await fetch(apiUrl + "/invite",{
+        body: body,
+        method: "POST",
+        headers: {
+            'Content-type': 'application/json'}
+    })
+}
+
 const LoginService = {
     login,
-    register
+    register,
+    invite
 }
 
 export default LoginService
