@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/go-fuego/fuego"
-	"github.com/rs/cors"
 	"io"
 	"net/http"
+
+	"github.com/go-fuego/fuego"
+	"github.com/rs/cors"
 )
 
 func Run(ctx context.Context, args []string, getenv func(string) string, stdin io.Reader, stdout, stderr io.Writer) error {
@@ -20,12 +21,13 @@ func Run(ctx context.Context, args []string, getenv func(string) string, stdin i
 
 	stdout.Write([]byte("db connected\n"))
 
-	server := fuego.NewServer(fuego.WithPort(":8080"))
-
-	fuego.Use(server, cors.New(cors.Options{
-		AllowedOrigins: []string{"localhost:3000"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
-	}).Handler)
+	server := fuego.NewServer(
+		fuego.WithPort(":8080"),
+		fuego.WithCorsMiddleware(cors.New(cors.Options{
+			AllowedOrigins: []string{"*"},
+			AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
+			AllowedHeaders: []string{"*"},
+		}).Handler))
 
 	routes := newRoutes(db, getenv)
 	routes.mount(server)
