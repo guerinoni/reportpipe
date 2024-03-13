@@ -1,10 +1,11 @@
 import {apiUrl} from "../constants/RoutesUrl";
 
-import { serialize } from 'cookie'
-import {encrypt} from "next/dist/server/app-render/action-encryption-utils";
-import {handleLoginCookies} from "@/app/actions";
-import {cookies} from "next/headers";
+//import { serialize } from 'cookie'
+//import {encrypt} from "next/dist/server/app-render/action-encryption-utils";
+//import {handleLoginCookies} from "@/app/actions";
+//import {cookies} from "next/headers";
 
+/*
 export function cookieHandler(sessionData) {
     const encryptedSessionData = encrypt(sessionData)
 
@@ -15,7 +16,7 @@ export function cookieHandler(sessionData) {
         path: '/',
     })
 }
-
+*/
 async function login(user, userType) {
     const body = {
         email: user?.email,
@@ -24,13 +25,13 @@ async function login(user, userType) {
 
     const response = await fetch(apiUrl + "/login",
         {
-                body: body,
+                body: JSON.stringify(body),
                 method: "POST",
                 headers: {
                     'Content-type': 'application/json'}
         })
 
-    await cookieHandler(response)
+    //  await cookieHandler(response)
 }
 
 async function register(user) {
@@ -40,7 +41,7 @@ async function register(user) {
         username: user?.username
     }
     return await fetch(apiUrl + "/signup",{
-        body: body,
+        body: JSON.stringify(body),
         method: "POST",
         headers: {
             'Content-type': 'application/json'}
@@ -50,7 +51,7 @@ async function register(user) {
 async function invite() {
     const body = {}
     return await fetch(apiUrl + "/invite",{
-        body: body,
+        body: JSON.stringify(body),
         method: "POST",
         headers: {
             'Content-type': 'application/json'}
