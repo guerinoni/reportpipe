@@ -1,12 +1,12 @@
+'use server'
+
 import {apiUrl} from "../constants/RoutesUrl";
 
-//import { serialize } from 'cookie'
-//import {encrypt} from "next/dist/server/app-render/action-encryption-utils";
-//import {handleLoginCookies} from "@/app/actions";
-//import {cookies} from "next/headers";
+import {encrypt} from "next/dist/server/app-render/action-encryption-utils";
+import {cookies} from "next/headers";
 
-/*
-export function cookieHandler(sessionData) {
+
+export async function cookieHandler(sessionData) {
     const encryptedSessionData = encrypt(sessionData)
 
     cookies().set('session', encryptedSessionData, {
@@ -16,7 +16,7 @@ export function cookieHandler(sessionData) {
         path: '/',
     })
 }
-*/
+
 async function login(user, userType) {
     const body = {
         email: user?.email,
@@ -31,14 +31,14 @@ async function login(user, userType) {
                     'Content-type': 'application/json'}
         })
 
-    //  await cookieHandler(response)
+    await cookieHandler(response)
 }
 
 async function register(user) {
     const body = {
         email: user?.email,
         password: user?.password,
-        username: user?.username
+        username: user?.email
     }
     return await fetch(apiUrl + "/signup",{
         body: JSON.stringify(body),
