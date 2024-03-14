@@ -8,26 +8,32 @@ import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import Link from '@mui/joy/Link';
 import {useState} from "react";
-import LoginService from "../services/LoginService";
-import {redirect} from "next/navigation";
-
+import {useRouter} from "next/navigation";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 export default function SignInForm({type, userType}) {
 
     const [user, setUser] = useState({})
+    const router = useRouter()
 
     const handleFormSubmit = async () => {
         if (type === 'sign-in') {
             try {
-                await LoginService.login(user, userType)
-                redirect("/home")
-            } catch (e) {
-                console.log("E: ", e)
+                const response = await axios.post("/api/users/login", user);
+                console.log("Login success", response.data);
+                toast.success("Login success");
+                router.push("/home")
+            } catch (error) {
+                console.log("Login failed", error.message);
+                toast.error(error.message);
             }
         } else {
             try {
-                await LoginService.register(user, userType)
-                redirect("/login")
+                const response = await axios.post("/api/users/register", user);
+                console.log("Sign up success", response.data);
+                toast.success("Sign up success");
+                router.push("/login")
             } catch (e) {
                 console.log("E: ", e)
             }

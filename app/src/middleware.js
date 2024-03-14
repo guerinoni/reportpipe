@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import {useEffect} from "react";
+import { getCookie } from 'cookies-next';
 
 const allowedOrigins = ['https://acme.com', 'https://localhost:8000']
 
@@ -6,7 +8,6 @@ const corsOptions = {
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 }
-
 
 export function middleware(request) {
 
@@ -35,11 +36,11 @@ export function middleware(request) {
         response.headers.set(key, value)
     })
 
-    const currentUser = request.cookies.get('currentUser')?.value
+    const currentUser = request.cookies.get('token')?.value || ''
 
-    if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
+    /*if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
         return Response.redirect(new URL('/dashboard', request.url))
-    }
+    }*/
 
     if (!currentUser && !request.nextUrl.pathname.startsWith('/sign-in') && !request.nextUrl.pathname.startsWith('/sign-up')) {
         return Response.redirect(new URL('/sign-in', request.url))
