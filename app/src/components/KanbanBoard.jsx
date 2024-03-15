@@ -92,20 +92,16 @@ export default function KanbanBoard() {
                 <Header />
                 <Sidebar />
                 <DragDropContext onDragEnd={handleDragEnd}>
-                    <div
-                        style={{
+                    <Box
+                        sx={{
                             display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            flexDirection: "row",
-                            margin: "0 auto"
                         }}
                     >
                         <Column title={"TO DO"} tasks={incomplete} id={"1"} />
                         <Column title={"DONE"} tasks={completed} id={"2"} />
                         <Column title={"IN REVIEW"} tasks={inReview} id={"3"} />
                         <Column title={"BACKLOG"} tasks={backlog} id={"4"} />
-                    </div>
+                    </Box>
                 </DragDropContext>
             </Box>
         </CssVarsProvider>
