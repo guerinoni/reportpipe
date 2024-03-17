@@ -5,6 +5,7 @@ help:
 	@echo "  install-migrate-tool   Install the migrate tool"
 	@echo "  db-up                  Starts docker-compose and run the migrations"
 	@echo "  db-down                Rollback the migrations and stop docker-compose"
+	@echo "  psql-local             Connect to the local postgres database"
 
 .PHONY: install-migrate-tool
 install-migrate-tool:
@@ -20,3 +21,7 @@ db-up: install-migrate-tool
 db-down: install-migrate-tool
 	@migrate -database "postgresql://user:password@localhost:5432/postgres?sslmode=disable" -path migrations down -all
 	@docker-compose down
+
+.PHONY: psql-local
+psql-local:
+	@docker exec -it reportpipe.postgres psql -d postgres -U user
