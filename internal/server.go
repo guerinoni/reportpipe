@@ -22,7 +22,7 @@ func Run(ctx context.Context, args []string, getenv func(string) string, stdin i
 	stdout.Write([]byte("db connected\n"))
 
 	server := fuego.NewServer(
-		fuego.WithPort(":8080"),
+		fuego.WithAddr("127.0.0.1:8080"),
 		fuego.WithCorsMiddleware(cors.New(cors.Options{
 			AllowedOrigins: []string{"*"},
 			AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},

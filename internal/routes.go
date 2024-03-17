@@ -2,18 +2,27 @@ package internal
 
 import (
 	"database/sql"
+
 	"github.com/go-fuego/fuego"
+	"reportpipe/internal/auth"
 )
 
 type Routes struct {
 	DB     *sql.DB
 	getEnv func(string) string
+	a      auth.Auth
 }
 
 func newRoutes(db *sql.DB, getEnv func(string) string) Routes {
+	a := auth.Auth{
+		DB:     db,
+		GetEnv: getEnv,
+	}
+
 	return Routes{
 		DB:     db,
 		getEnv: getEnv,
+		a:      a,
 	}
 }
 
@@ -23,6 +32,9 @@ func (r *Routes) mount(server *fuego.Server) {
 	})
 	fuego.Post(server, "/login", r.login)
 	fuego.Post(server, "/signup", r.signup)
+
+	fuego.Use(server, r.a.Middleware)
+	fuego.Post(server, "/logout", r.logout)
 }
 
 //func adminOnly(h http.Handler) http.Handler {

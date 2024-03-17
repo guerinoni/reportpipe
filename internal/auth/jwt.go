@@ -1,11 +1,15 @@
 package auth
 
 import (
+	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/go-fuego/fuego"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -17,7 +21,7 @@ type JWTClaim struct {
 
 	Username string `json:"username"`
 	Email    string `json:"email"`
-	//Roles    []string  // TODO: Add roles to the token.
+	// Roles    []string  // TODO: Add roles to the token.
 }
 
 // GenerateJWT creates a new JWT token.
@@ -70,8 +74,13 @@ func validateToken(signedToken string, getenv func(string) string) (*JWTClaim, e
 	return claims, nil
 }
 
+type Auth struct {
+	DB     *sql.DB
+	GetEnv func(string) string
+}
+
 // Middleware validates the token and calls the next handler.
-func Middleware(next http.Handler, getenv func(string) string) http.Handler {
+func (a *Auth) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := strings.Split(r.Header.Get("Authorization"), "Bearer ")
 		if len(authHeader) != 2 {
@@ -83,8 +92,8 @@ func Middleware(next http.Handler, getenv func(string) string) http.Handler {
 			return
 		}
 
-		secret := getenv("SECRET")
-		_, err := validateToken(authHeader[1], func(string) string {
+		secret := a.GetEnv("SECRET")
+		claims, err := validateToken(authHeader[1], func(string) string {
 			return secret
 		})
 		if err != nil {
@@ -96,6 +105,38 @@ func Middleware(next http.Handler, getenv func(string) string) http.Handler {
 			return
 		}
 
-		next.ServeHTTP(w, r)
+		resp, err := a.DB.QueryContext(r.Context(), "SELECT revoke_token_before FROM users WHERE username = $1", claims.Username)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fuego.SendJSON(w, map[string]string{"error": "Internal Server Error"})
+			return
+		}
+
+		defer resp.Close()
+
+		if !resp.Next() {
+			w.WriteHeader(http.StatusUnauthorized)
+			fuego.SendJSON(w, map[string]string{"error": "User not found"})
+			return
+		}
+
+		var revokeTokenBefore time.Time
+		err = resp.Scan(&revokeTokenBefore)
+		if err != nil && errors.Is(err, sql.ErrNoRows) {
+			w.WriteHeader(http.StatusInternalServerError)
+			fuego.SendJSON(w, map[string]string{"error": err.Error()})
+			return
+		}
+
+		if claims.IssuedAt.Time.Before(revokeTokenBefore) {
+			w.WriteHeader(http.StatusUnauthorized)
+			fuego.SendJSON(w, map[string]string{"error": "Token revoked"})
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), "username", claims.Username)
+		ctx = context.WithValue(ctx, "email", claims.Email)
+
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
