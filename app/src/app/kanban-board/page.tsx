@@ -3,7 +3,7 @@
 import * as React from 'react';
 import KanbanBoard from "@/components/KanbanBoard";
 
-export default function SignUp() {
+export default function KanbanBoardPage() {
   return (
       <>
           <KanbanBoard/>

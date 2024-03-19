@@ -7,8 +7,8 @@ import Box from "@mui/joy/Box";
 
 const Container = styled(Box)`
     border-radius: 2.5px;
-    width: 400px;
-    max-height: 100%;
+    width: 25%;
+    height: 100dvh;
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
